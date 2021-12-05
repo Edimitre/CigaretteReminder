@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="backgroundColorDay">#2196F3</color>
+    <color name="widgetColorDay">#9C27B0</color>
+    <color name="textColorDay">#FFFFFFFF</color>
+
+
+    <color name="backgroundColorNight">#483C5D</color>
+    <color name="widgetColorNight">#3F51B5</color>
+    <color name="textColorNight">#FFFFFFFF</color>
+
+
+    <color name="weedColor">#8BC34A</color>
+    <color name="widgetWeed">#FF9800</color>
+    <color name="textColorWeed">#673AB7</color>
+
+    <color name="black">#000000</color>
+</resources>
