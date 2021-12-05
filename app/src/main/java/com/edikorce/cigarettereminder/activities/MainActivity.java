@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (item.getItemId() == R.id.btn_weed_activity) {
-            startActivity(new Intent(MainActivity.this, WeedActivity.class));
+            openChangeCigarDialog();
         }else if (item.getItemId() == R.id.btn_reset_everything){
             openResetEverythingDialog();
         }
@@ -104,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
         btnLightCigar.setOnClickListener(v->{
 
             lightCigar();
+
+        });
+
+        nrOfCigars.setOnClickListener(v->{
+            openEditNrOfCigarsDialog();
+
 
         });
     }
@@ -146,6 +152,41 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void openEditNrOfCigarsDialog() {
+
+        EditText inputValue = new EditText(getApplication());
+        inputValue.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setView(inputValue);
+        dialog.setTitle("Cigarette Reminder");
+        dialog.setMessage("vendosni nr e sakte te cigareve\nqe keni te ngelura\n ne rast se nuk i keni njelloj fizikisht");
+        dialog.setNegativeButton("Mbyll", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        dialog.setPositiveButton("Ndrysho", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String value = inputValue.getText().toString();
+                if (!value.isEmpty() && Integer.parseInt(value) < 25) {
+                    editor.putInt("nrOfCigars", Integer.parseInt(value));
+                    editor.apply();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Vlera e cigareve nuk ishte e sakte ", Toast.LENGTH_SHORT).show();
+                }
+
+                showUserValues();
+
+            }
+        });
+        dialog.show();
+
+    }
+
     private void openResetEverythingDialog() {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -168,15 +209,39 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void openChangeCigarDialog() {
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle("Cigarette Reminder ");
+        dialog.setMessage("Deshironi te ndroni llojin e cigares \n ne dicka me te forte ?");
+        dialog.setNegativeButton("Jo", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+            }
+        });
+        dialog.setPositiveButton("Po", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                startActivity(new Intent(MainActivity.this, WeedActivity.class));
+            }
+        });
+        dialog.show();
+
+    }
+
     private void addPacket(PacketCigarettes packetCigarettes){
 
-        editor.putInt("nrOfCigars", packetCigarettes.getNrOfCigars());
+        editor.putInt("nrOfCigars", 20);
 
 
         int valueSpended = sharedPreferences.getInt("valueSpended", 20) + packetCigarettes.getValue();
         editor.putInt("valueSpended", valueSpended);
 
         editor.apply();
+
         showUserValues();
 
     }
