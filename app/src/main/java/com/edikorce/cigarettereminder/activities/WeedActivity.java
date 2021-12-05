@@ -54,12 +54,12 @@ public class WeedActivity extends AppCompatActivity {
         DateTimeUtilities dt = new DateTimeUtilities();
         if (switcher.isChecked()){
 
-            reminder.setReminder(getApplicationContext(), dt.getHourInt() + 5, 0);
+            reminder.setWeedReminder(getApplicationContext(), dt.getHourInt() + 5, dt.getMinuteInt());
             Toast.makeText(getApplicationContext(), "Do kujtoheni per 5 ore", Toast.LENGTH_LONG).show();
 
         }else{
 
-            reminder.setReminder(getApplicationContext(), dt.getHourInt() + 3, dt.getMinuteInt());
+            reminder.setWeedReminder(getApplicationContext(), dt.getHourInt() + 3, dt.getMinuteInt());
             Toast.makeText(getApplicationContext(), "Do kujtoheni per 3 ore", Toast.LENGTH_LONG).show();
 
         }

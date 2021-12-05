@@ -24,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.edikorce.cigarettereminder.R;
 import com.edikorce.cigarettereminder.dateTimeUtilities.DateTimeUtilities;
-import com.edikorce.cigarettereminder.entities.PacketCigarettes;
 import com.edikorce.cigarettereminder.systemServices.Reminder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         setListeners();
         showUserValues();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,8 +138,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String value = inputValue.getText().toString();
                 if (!value.isEmpty()) {
-                    PacketCigarettes packetCigarettes = new PacketCigarettes(20, Integer.parseInt(value));
-                    addPacket(packetCigarettes);
+                    editor.putInt("nrOfCigars", 20);
+                    editor.putInt("valueSpended", Integer.parseInt(value));
+                    editor.apply();
+                    showUserValues();
                 } else {
                     Toast.makeText(getApplicationContext(), "Vlera e paketes nuk mund te jete bosh", Toast.LENGTH_SHORT).show();
                 }
@@ -175,11 +175,12 @@ public class MainActivity extends AppCompatActivity {
                 if (!value.isEmpty() && Integer.parseInt(value) < 25) {
                     editor.putInt("nrOfCigars", Integer.parseInt(value));
                     editor.apply();
+                    showUserValues();
                 } else {
                     Toast.makeText(getApplicationContext(), "Vlera e cigareve nuk ishte e sakte ", Toast.LENGTH_SHORT).show();
                 }
 
-                showUserValues();
+
 
             }
         });
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
         dialog.setTitle("Cigarette Reminder ");
-        dialog.setMessage("Are U Sure U Want To Delete Everyting ?");
+        dialog.setMessage("Deshironi te ristartoni gjithcka ?\nky veprim nuk mund te rikthehet!");
         dialog.setNegativeButton("Jo", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -232,20 +233,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void addPacket(PacketCigarettes packetCigarettes){
-
-        editor.putInt("nrOfCigars", 20);
-
-
-        int valueSpended = sharedPreferences.getInt("valueSpended", 20) + packetCigarettes.getValue();
-        editor.putInt("valueSpended", valueSpended);
-
-        editor.apply();
-
-        showUserValues();
-
-    }
-
     private void lightCigar(){
 
         Reminder reminder = new Reminder(getApplicationContext());
@@ -261,13 +248,13 @@ public class MainActivity extends AppCompatActivity {
         if (switcher.isChecked()){
             editor.putInt("timestamp", 2);
             editor.apply();
-            reminder.setReminder(getApplicationContext(), dt.getHourInt() + 1, dt.getMinuteInt() + 30);
+            reminder.setCigaretteReminder(getApplicationContext(), dt.getHourInt() + 1, dt.getMinuteInt() + 30);
             Toast.makeText(getApplicationContext(), "Do kujtoheni per 1 ore e 30 min " , Toast.LENGTH_LONG).show();
 
         }else{
             editor.putInt("timestamp", 1);
             editor.apply();
-            reminder.setReminder(getApplicationContext(), dt.getHourInt() + 1, dt.getMinuteInt());
+            reminder.setCigaretteReminder(getApplicationContext(), dt.getHourInt() + 1, dt.getMinuteInt());
             Toast.makeText(getApplicationContext(), "Do kujtoheni per 1 ore" , Toast.LENGTH_LONG).show();
 
         }
@@ -314,7 +301,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Reminder reminder = new Reminder(getApplicationContext());
-        reminder.clearReminder();
+        reminder.clearCigaretteReminder();
+        reminder.clearWeedReminder();
 
         showUserValues();
         Toast.makeText(getApplicationContext(), "Te dhenat u fshijne", Toast.LENGTH_SHORT).show();
